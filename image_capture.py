@@ -2,6 +2,7 @@ import cv2
 import os
 import imutils
 import time
+import numpy
 
 def main():
     #state of doorway_lights on/off (L1 = on, L0 = off)
@@ -19,6 +20,8 @@ def grayscale(name):
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     #gray_save = cv2.imwrite('/home/pi/code/captured_images/gray_'+name+'.jpg', gray_image)
     # Use the cvtColor() function to threshold grayscale the image
+    th = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+    th_save = cv2.imwrite('/home/pi/code/captured_images/newthresh_'+name+'.jpg', th)
     thresh = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     thresh_save = cv2.imwrite('/home/pi/code/captured_images/thresh_'+name+'.jpg', thresh)
 
@@ -29,7 +32,7 @@ def picloop(img_type):
     name = ''
     #while loop to take 10 pictures at a time (b/c num is assigned to 10)
     count = 0
-    num = 10
+    num = 100
     while count < num:
         name_count += 1
         name = img_type + '_doorway' + str(name_count)

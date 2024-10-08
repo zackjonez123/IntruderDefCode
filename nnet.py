@@ -40,12 +40,16 @@ transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5
 
 classes = ('Friendly', 'Hostile')
 
+def calc(i, k):
+    o = (i-k) + 1
+    return o
+
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 6, kernel_size=5, stride=1) # images are only 0 and 255, so input and ouput channels are 2, 3x3 is a common kernel size
+        self.conv1 = nn.Conv2d(1, 6, kernel_size=3, stride=1) # images are only 0 and 255, so input and ouput channels are 2, 3x3 is a common kernel size
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 5) # input, output, and kernel size are subject to change
+        self.conv2 = nn.Conv2d(6, 16, 3) # input, output, and kernel size are subject to change
         #self.drop1 = nn.Dropout(0.25) # probability of an element being zeroed
         #self.drop2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(16*5*5, 100) # input and output
@@ -137,6 +141,8 @@ def main():
     for batchnum, (pic, label) in enumerate(loadtrain):
         print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
 
+    print("The number of outputs is: ", calc(1, 3))
+    
     model = Net().to(device)
     #criterion = nn.CrossEntropyLoss()
     #optimizer = optim.Adam(model.parameters(), lr=learning_rate)

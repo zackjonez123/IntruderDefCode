@@ -42,7 +42,6 @@ import os
 def conv(in_image, kernel):
     # Array of convolutions
     convolved_arr = []
-    #print(in_image.shape)
     # Size of filter image
     fil_width = kernel.shape[1]
     fil_height = kernel.shape[0]
@@ -62,54 +61,6 @@ def conv(in_image, kernel):
             convolved_arr.append(norm_convolved)
 
     return convolved_arr
-
-# New function for kernel
-# def data_conv(in_path, data_path):
-#     in_image = cv2.imread(in_path)
-    
-   
-# Loop through the directory of cropped images
- # Create list of data images
-    # path = data_path
-    # dir_list = os.listdir(path) 
-    # print(dir_list)
-    # data_img_read = cv2.imread(path+'\\'+dir_list[0])
-    # data_img_flip = cv2.flip(data_img_read, 1)
-    # resized_data = cv2.resize(data_img_flip, (data_img_flip.shape[0], data_img_flip.shape[0]))
-    # cv2.imshow("data",resized_data)
-
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
-    # Loop through data pool
-    # sum_arr = []
-    # for i in range(len(dir_list)):
-    #     count = 0
-    #     # Get data pool image
-    #     data_img_read = cv2.imread(path+'\\'+dir_list[i])
-    #     data_img_flip = cv2.flip(data_img_read, 1)
-    #     resized_data = cv2.resize(data_img_flip, (data_img_flip.shape[0], data_img_flip.shape[0]))
-    #     conv2 = conv(resized_data)
-    #     for j in range(conv1.shape[0]):
-    #         for k in range(conv1.shape[1]) :
-    #             if conv1[j,k] == conv2[j,k]:
-    #                 count+=1
-    #     sum_arr.append(count)
-    # #print(sum_arr)
-    # biggest = 0
-    # for w in range(len(sum_arr)):
-    #     if sum_arr[w] > sum_arr[w-1]:
-    #         biggest = w
-    # return biggest
-
-# convolve within the loop
-# return array of results
-
-# def compare(in_path, data_path):
-#     in_image = cv2.imread(in_path)
-#     resized_img = cv2.resize(in_image, (in_image.shape[0], in_image.shape[0]))
-#     conv1 = conv(resized_img)
-#     #conv2 = data_conv(data_path)
     
 def stats(in_image, kernel):
     conv1 = conv(in_image, kernel)
@@ -120,52 +71,61 @@ def stats(in_image, kernel):
     #print("Min value of"+descript+"is: ", min1)
     average = n.sum(conv1) / len(conv1)
     #print("Average value of"+descript+"is: ", average)
-
+    
     stats = [max1, min1, average]
     return stats
-    # Find spike in data
-    # for i in range(len(conv1)):
-    #     if conv1[i] == max1:
-    #         print(conv1[i])
-    #         print("index:" + str(i))
-
-    # Set threshold and evaluate
 
 def evaluation(in_path, test_path, kernel):
     dir_list1 = os.listdir(in_path)
     in_avmax = []
     in_avmin = [] 
     in_avavg = [] 
+    inp = []
     dir_list2 = os.listdir(test_path)
     test_avmax = [] 
     test_avmin = [] 
-    test_avavg = [] 
+    test_avavg = []
+    test = [] 
     # Run stats on all images
     for i in range(len(dir_list2)):
         test_img = cv2.imread(test_path+"\\"+dir_list2[i])
         t = stats(test_img, kernel)
-        test_avmax.append(t[0])
-        test_avmin.append(t[1])
-        test_avavg.append(t[2])
+        # test_avmax.append(t[0])
+        # test_avmin.append(t[1])
+        # test_avavg.append(t[2])
+        #test.append(t[3])
+        test.append(t[0])
     for j in range(len(dir_list1)):
         in_img = cv2.imread(in_path+"\\"+dir_list1[j])
         x = stats(in_img, kernel)
-        in_avmax.append(x[0])
-        in_avmin.append(x[1])
-        in_avavg.append(x[2])
+        # in_avmax.append(x[0])
+        # in_avmin.append(x[1])
+        # in_avavg.append(x[2])
+        inp.append(x[0])
+        #inp.append(x[4])
 
-    tavg = n.sum(test_avavg) / len(test_avavg)
-    tavgmax = n.sum(test_avmax) / len(test_avmax)
-    tavgmin = n.sum(test_avmin) / len(test_avmin)
-    test_stats = [tavg, tavgmax, tavgmin]
+    # tavg = n.sum(test_avavg) / len(test_avavg)
+    # tavgmax = n.sum(test_avmax) / len(test_avmax)
+    # tavgmin = n.sum(test_avmin) / len(test_avmin)
+    
+    test_stats = n.max(test)
 
-    inavg = n.sum(in_avavg) / len(in_avavg)
-    inavgmax = n.sum(in_avmax) / len(in_avmax)
-    inavgmin = n.sum(in_avmin) / len(in_avmin)
-    in_stats = [inavg, inavgmax, inavgmin]
+    # inavg = n.sum(in_avavg) / len(in_avavg)
+    # inavgmax = n.sum(in_avmax) / len(in_avmax)
+    # inavgmin = n.sum(in_avmin) / len(in_avmin)
+    in_stats = n.min(inp)
 
     print("Test Image stats are: ", test_stats)
     print("Zack Image stats are: ", in_stats)
+
+def decision(in_path, kernel, threshold):
+    img_read = cv2.imread(in_path)
+    y = stats(img_read, kernel)
+    if y[0] > threshold:
+        return False # Friendly
+    else:
+        return True # Hostile
+
 
 def main():
     in_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zack')
@@ -174,26 +134,25 @@ def main():
 
     #zack_image = cv2.imread(in_path)
     kernel = cv2.imread(data_path)
-    evaluation(in_path, test_path, kernel)
+    threshold = 750
+    dir_list2 = os.listdir(test_path)
+    for i in range(len(dir_list2)):
+        path = test_path+"\\"+dir_list2[i]
+        print(decision(path, kernel, threshold))
+    #evaluation(in_path, test_path, kernel)
     #print(stats(zack_image, kernel, "Zack"))
 
     #test_image = cv2.imread(test_path)
     # print(stats(zack_image, kernel, "Zack Input"))
     # print(stats(test_image, kernel, "Test Input"))
 
-    #print(data_conv(in_path, data_path))
-    # print(resized_img.shape)
-    # cv2.imshow("resized",resized_img)
 
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
-    #convolution(in_path, data_path)
-    #numpy_conv(in_path, data_path)
 
 # *********** Notes *************
+# (w/ Filter cropped10.jpg)
 # - between Zack and Test images, the averages and mins are similar, but the maxs are:
 # Test avg max =717, Zack avg max = 775
+# The max of maximums for test are 746, the minimum of maximums for Zack are 758
 
 if __name__ == '__main__':
     main()

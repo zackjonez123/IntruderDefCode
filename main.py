@@ -1,4 +1,4 @@
-    """
+"""
     ********General Outline of Intruder Defense Code*************
 
     Goals:
@@ -18,10 +18,9 @@
     - Test results (1 or 0 will be indicated through terminal to represent servo motor on/off)
 
     """
+import crop
 
-def main():
-
-def live_classifier(img):
+#def live_classifier(img):
     # ***Pseudo code*** 
     # if image_classifier(img) ---> friendly
     # return False (servo off)
@@ -32,12 +31,13 @@ def live_classifier(img):
 
 
 
-def live_cam(img):
+# def live_cam(img):
 
-    return img
+#     return img
 
-
-
+def main():
+    path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zack\\newthresh_Zack_L1_doorway14.jpg'
+    crop.crop(path)
 
 if __name__ == '__main__':
     main()

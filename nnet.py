@@ -2,6 +2,7 @@
 ******* This is the Neural Network Prototype **********
 
 """
+import crop
 import os
 #from tarfile import data_filter
 #import matplotlib.pyplot as plt
@@ -33,12 +34,14 @@ learning_rate = 0.001
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 #load datasets
-# train_dataset = 
+# train_dataset = torch.utils.data.DataLoader()
 # test_dataset = 
 # train_loader = 
 # test_loader = 
 
 classes = ('Friendly', 'Hostile')
+
+
 
 def calc(i, k):
     o = (i-k) + 1
@@ -47,9 +50,9 @@ def calc(i, k):
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 6, kernel_size=3, stride=1) # images are only 0 and 255, so input and ouput channels are 2, 3x3 is a common kernel size
+        self.conv1 = nn.Conv2d(480, calc(480, 40), kernel_size=40, stride=1) # images are only 0 and 255, so input and ouput channels are 2, 3x3 is a common kernel size
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 3) # input, output, and kernel size are subject to change
+        self.conv2 = nn.Conv2d(calc(480, 40), 16, 3) # input, output, and kernel size are subject to change
         #self.drop1 = nn.Dropout(0.25) # probability of an element being zeroed
         #self.drop2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(16*5*5, 100) # input and output
@@ -123,27 +126,36 @@ class Net(nn.Module):
 #         test_loss, correct, len(test_loader.dataset),
 #         100. * correct / len(test_loader.dataset)))
 
-def grayscaleloader(path:str)->Image.Image:
-    with open(path, 'rb') as file:
-        pic = Image.open(file).convert('L')
-    return pic
+# def grayscaleloader(path:str)->Image.Image:
+#     with open(path, 'rb') as file:
+#         pic = Image.open(file).convert('L')
+#     return pic
 
 def main():
     
-    trainkwargs = {'batch_size':10, 'shuffle':True}
-    testkwargs = {'batch_size':10, 'shuffle':True}
-    path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics')
-    full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader)
-    print('Subfolder int assignment', full_data.class_to_idx)
-    traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
-    loadtrain = DataLoader(traindata, **trainkwargs)
-    loadtest = DataLoader(testdata, **testkwargs)
-    for batchnum, (pic, label) in enumerate(loadtrain):
-        print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
+    # trainkwargs = {'batch_size':10, 'shuffle':True}
+    # testkwargs = {'batch_size':10, 'shuffle':True}
+    # path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics')
+    # full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader)
+    # print('Subfolder int assignment', full_data.class_to_idx)
+    # traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
+    # loadtrain = DataLoader(traindata, **trainkwargs)
+    # loadtest = DataLoader(testdata, **testkwargs)
+    # for batchnum, (pic, label) in enumerate(loadtrain):
+    #     print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
 
-    print("The number of outputs is: ", calc(1, 3))
+
+    k = 40
+
     
-    model = Net().to(device)
+    i = 480
+
+
+    print("The number of outputs is: ", calc(480, 40))
+    
+    #model = Net().to(device)
+    
+
     #criterion = nn.CrossEntropyLoss()
     #optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     

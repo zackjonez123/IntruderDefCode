@@ -2,6 +2,7 @@
 ******* This is the Neural Network Prototype **********
 
 """
+import cv2
 import crop
 import os
 #from tarfile import data_filter
@@ -10,12 +11,14 @@ import numpy as np
 
 #from sklearn.base import accuracy_score
 import torch
+import torchvision
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+#from torch.optim import sgd
 #from torch.optim.lr_scheduler import StepLR
 
 from image_capture import grayscale
@@ -30,16 +33,19 @@ epochs = 4 # can increase for more accuracy
 batch_size = 4
 learning_rate = 0.001
 
-#transform images into tensors
-transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+def grayscaleloader(path:str)->Image.Image:
+    with open(path, 'rb') as file:
+        pic = Image.open(file).convert('L')
+    return pic
 
-#load datasets
-# train_dataset = torch.utils.data.DataLoader()
-# test_dataset = 
-# train_loader = 
-# test_loader = 
+# Creating datasets from sample data
+trainkwargs = {'batch_size':10, 'shuffle':True}
+testkwargs = {'batch_size':10, 'shuffle':True}
+path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes')
+full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader) 
 
-classes = ('Friendly', 'Hostile')
+
+classes = ('Open', 'Closed', 'Occupied')
 
 
 
@@ -50,12 +56,12 @@ def calc(i, k):
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(480, calc(480, 40), kernel_size=40, stride=1) # images are only 0 and 255, so input and ouput channels are 2, 3x3 is a common kernel size
-        self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(calc(480, 40), 16, 3) # input, output, and kernel size are subject to change
+        self.conv1 = nn.Conv2d(480, calc(480, 40), kernel_size=40, stride=1) # calc(480, 40) == 441
+        #self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(calc(480, 40), 401, kernel_size=40, stride=1) # 441 - kernel + 1 = 401 outputs
         #self.drop1 = nn.Dropout(0.25) # probability of an element being zeroed
         #self.drop2 = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(16*5*5, 100) # input and output
+        self.fc1 = nn.Linear(16*5*5, 100) # change 16*5*5, should be the final size after pooling and conv layers
         self.fc2 = nn.Linear(100, 84) # 100 and 84 can be changed
         self.fc3 = nn.Linear(84, 3)
 
@@ -78,33 +84,43 @@ class Net(nn.Module):
         x = self.fc3(x)
         return x
 
+model = Net().to(device)
 
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+
+print('Subfolder int assignment', full_data.class_to_idx)
+traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
+loadtrain = DataLoader(traindata, **trainkwargs)
+loadtest = DataLoader(testdata, **testkwargs)
+for batchnum, (pic, label) in enumerate(loadtrain):
+    print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
 
 # Train data
 # def train(model, device, train_loader, optimizer, epoch):
-#     model.train()
-#     total_steps = len(train_loader)
-#     for epoch in range(epochs):
-#         for i, (images, labels) in enumerate(train_loader):
-#             # inputs layer: 3 input channels, 6 output channels, 5x5 kernel size
-#             images = images.to(device)
-#             labels = labels.to(device)
+model.train()
+total_steps = len(loadtrain)
+for epoch in range(epochs):
+    for i, (images, labels) in enumerate(loadtrain):
+            # inputs layer: 3 input channels, 6 output channels, 5x5 kernel size
+        images = images.to(device)
+        labels = labels.to(device)
 
-#             # forward pass
-#             outputs = model(images)
-#             loss = criterion(outputs, labels)
+            # forward pass
+        outputs = model(images)
+        loss = criterion(outputs, labels)
 
-#             # back pass
-#             optimizer.zerograd()
-#             loss.backward()
-#             optimizer.step()
+            # back pass
+        optimizer.zerograd()
+        loss.backward()
+        optimizer.step()
 
-#             if (i+1) % 2000 == 0:
-#                 print (f'Epoch [{epoch+1}/{epochs}], Step [{i+1}/{total_steps}], Loss: {loss.item():.4f}')
+        if (i+1) % 2000 == 0:
+            print (f'Epoch [{epoch+1}/{epochs}], Step [{i+1}/{total_steps}], Loss: {loss.item():.4f}')
 
-#     print('Finished Training')
-#     PATH = './cnn.pth'
-#     torch.save(model.state_dict(), PATH)
+    print('Finished Training')
+    PATH = './cnn.pth'
+    torch.save(model.state_dict(), PATH)
 
 
 # Test Data
@@ -126,17 +142,23 @@ class Net(nn.Module):
 #         test_loss, correct, len(test_loader.dataset),
 #         100. * correct / len(test_loader.dataset)))
 
-# def grayscaleloader(path:str)->Image.Image:
-#     with open(path, 'rb') as file:
-#         pic = Image.open(file).convert('L')
-#     return pic
 
-def main():
-    
+
+def cropAll(in_path, write_path, name):
+    dir_list = os.listdir(in_path)
+    count = 0
+    for j in range(len(dir_list)):
+        read_path = in_path+"\\"+dir_list[j]
+        cropped_img = crop.crop(read_path)
+        cv2.imwrite(write_path+'\\'+name+str(count)+'.jpg', cropped_img)
+        count+=1
+
+#def main():
+    # Load images into train and test datasets
     # trainkwargs = {'batch_size':10, 'shuffle':True}
     # testkwargs = {'batch_size':10, 'shuffle':True}
-    # path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics')
-    # full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader)
+    # path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes')
+    # full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader) 
     # print('Subfolder int assignment', full_data.class_to_idx)
     # traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
     # loadtrain = DataLoader(traindata, **trainkwargs)
@@ -144,21 +166,26 @@ def main():
     # for batchnum, (pic, label) in enumerate(loadtrain):
     #     print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
 
+    # Sample Data Paths
+    open_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\opendoor'
+    closed_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\closedoor'
+    zack_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zack'
 
-    k = 40
+    # Crop and save sample data images into 'classes'
+    # open_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOpen'
+    # cropAll(open_path, open_write_path, name='open')
+    # closed_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedClosed'
+    # cropAll(closed_path, closed_write_path, name='closed')
+    # zack_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedZack'
+    # cropAll(zack_path, zack_write_path, name='zack')
 
+    # k = 40
+    # i = 480
+    # print("The number of outputs is: ", calc(i, k))
     
-    i = 480
-
-
-    print("The number of outputs is: ", calc(480, 40))
     
-    #model = Net().to(device)
+    
     
 
-    #criterion = nn.CrossEntropyLoss()
-    #optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    
-
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()

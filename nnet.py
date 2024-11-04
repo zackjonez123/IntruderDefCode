@@ -5,11 +5,8 @@
 import cv2
 import crop # My crop.py module
 import os
-#from tarfile import data_filter
-#import matplotlib.pyplot as plt
 import numpy as np
 
-#from sklearn.base import accuracy_score
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -18,7 +15,6 @@ import torchvision.datasets as datasets
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-#from torch.optim import sgd
 from torch.optim.lr_scheduler import StepLR
 
 from image_capture import grayscale
@@ -35,13 +31,10 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(1, 239, kernel_size=4, stride=2) # calc(480, 4, 2) == 239
-        #self.pool = nn.MaxPool2d(2, 2)
-        #self.conv2 = nn.Conv2d(calc(480, 4, 3), 401, kernel_size=4, stride=3) # 441 - kernel + 1 = 401 outputs
         #self.drop1 = nn.Dropout(0.25) # probability of an element being zeroed
         #self.drop2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(119*119*239, 100) # torch.Size([10, 239, 119, 119]) Pool
         self.fc2 = nn.Linear(100, 3) # 100 and 84 can be changed
-        #self.fc3 = nn.Linear(84, 3)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -50,9 +43,6 @@ class Net(nn.Module):
         x = F.max_pool2d(x, 2)
         #print(x.shape, "Pool")
         #x = self.drop1(x)
-        #x = self.conv2(x)
-        #x = F.relu(x)
-        #x = self.pool2(x)
         x = torch.flatten(x, 1)
         #print(x.shape, "Linear input")
         x = self.fc1(x)
@@ -60,7 +50,6 @@ class Net(nn.Module):
         #x = self.drop2(x)
         x = self.fc2(x)
         output = F.log_softmax(x, dim=1)
-        #x = self.fc3(x)
         return output
 
 # Train data
@@ -69,15 +58,15 @@ def train(model, device, loadtrain, optimizer, epochs):
     total_steps = len(loadtrain)
     #for epoch in range(epochs):
     for batch_idx, (images, labels) in enumerate(loadtrain):
-                # inputs layer: 3 input channels, 6 output channels, 5x5 kernel size
+        # inputs layer: 3 input channels, 6 output channels, 5x5 kernel size
         images = images.to(device)
         labels = labels.to(device)
 
-                # forward pass
+        # forward pass
         outputs = model(images)
         loss = F.nll_loss(outputs, labels)
 
-                # back pass
+        # back pass
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -86,8 +75,6 @@ def train(model, device, loadtrain, optimizer, epochs):
             print (f'Epoch [{epochs}/{epochs}], Step [{batch_idx}/{total_steps}], Loss: {loss.item():.4f}')
 
     print('Finished Training')
-        # PATH = './cnn.pth'
-        # torch.save(model.state_dict(), PATH)
 
 
 # Test Data
@@ -131,7 +118,7 @@ def main():
     device = torch.device("cpu")
 
     # Hyper parameters
-    epochs = 3 # can increase for more accuracy
+    epochs = 1 # can increase for more accuracy
     batch_size = 10
     learning_rate = 1.0
 
@@ -148,8 +135,6 @@ def main():
     #     print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
 
     model = Net().to(device)
-
-    
     optimizer = optim.Adadelta(model.parameters(), lr=learning_rate)
 
     scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
@@ -158,23 +143,7 @@ def main():
         test(model, device, loadtest)
         scheduler.step()
 
-    
-    torch.save(model.state_dict(), "zack_cnn.pt") # Coefficients to send to Raspberry Pi
-
-
-    # test_img = Image.open('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOpen\\open34.jpg')
-    # #turn test_img into a tensor before calling forward
-    # t1 = transforms.Grayscale(1)
-    # t2 = transforms.Compose([transforms.ToTensor()])
-    # # gray_img = t1(test_img)
-    # # img_tensor = t2(gray_img)
-    # img_tensor = t2(test_img)
-    # #print(img_tensor.shape)
-    # model.forward(img_tensor)
-
-   
-   
-
+    torch.save(model.state_dict(), "results_cnn.pt") # Coefficients to send to Raspberry Pi
 
     # Sample Data Paths
     open_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\opendoor'
@@ -188,16 +157,6 @@ def main():
     # cropAll(closed_path, closed_write_path, name='closed')
     # zack_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedZack'
     # cropAll(zack_path, zack_write_path, name='zack')
-    
-    
-
-    # k = 40
-    # i = 480
-    # print("The number of outputs is: ", calc(i, k))
-    
-    
-    
-    
 
 if __name__ == '__main__':
     main()

@@ -3,6 +3,7 @@ import os
 import imutils
 import time
 import numpy
+import crop
 
 def main():
     #state of doorway_lights on/off (L1 = on, L0 = off)
@@ -15,15 +16,17 @@ def main():
 
 def grayscale(name):
     # Load the input image
-    image = cv2.imread('/home/pi/code/captured_images/'+name+'.jpg')
+    image = cv2.imread('/home/pi/code/captured_images/'+name+'.jpg') #Pi path == /home/pi/code/captured_images/ w/ .jpg
     # Use the cvtColor() function to grayscale the image
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     #gray_save = cv2.imwrite('/home/pi/code/captured_images/gray_'+name+'.jpg', gray_image)
     # Use the cvtColor() function to threshold grayscale the image
     th = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 11, 2)
-    th_save = cv2.imwrite('/home/pi/code/captured_images/newthresh_'+name+'.jpg', th)
-    thresh = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    thresh_save = cv2.imwrite('/home/pi/code/captured_images/thresh_'+name+'.jpg', thresh)
+    th_save = cv2.imwrite('/home/pi/code/captured_images/newthresh_'+name+'.jpg', th) # Pi path == '/home/pi/code/captured_images/newthresh_' w/ .jpg
+    #thresh = cv2.threshold(gray_image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    #thresh_save = cv2.imwrite('/home/pi/code/captured_images/thresh_'+name+'.jpg', thresh)
+
+
 
 def picloop(img_type):
     #Take a certain number of pictures at a time (defined by the variable num)
@@ -41,6 +44,14 @@ def picloop(img_type):
         print(name)
         grayscale(name)
         print(count)
+    return None
+
+def cropCurrent(name):
+    pic(name)
+    path = '/home/pi/code/captured_images/'+name+'.jpg'
+    grayscale(name)
+    cropped_image = crop.crop(path)
+    cv2.imwrite(path, cropped_image)
     return None
 
 def pic(name):

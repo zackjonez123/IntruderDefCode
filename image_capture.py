@@ -48,6 +48,11 @@ def picloop(img_type):
 
 def cropCurrent(name):
     pic(name)
+    pic(name)
+    pic(name)
+    pic(name)
+    pic(name)
+    pic(name)
     path = '/home/pi/code/captured_images/'+name+'.jpg'
     grayscale(name)
     cropped_image = crop.crop(path)

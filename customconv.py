@@ -8,37 +8,6 @@ import numpy as n
 import cv2
 import os
 
-
-# def rbg_correction(in_path, data_path):
-#     # Read input image
-#     input_img = cv2.imread(in_path)
-#     # Create list of data images
-#     path = data_path
-#     dir_list = os.listdir(path) 
-#     # Loop through data pool
-#     for i in range(len(dir_list)):
-#         # Get data pool image
-#         data_img_read = cv2.imread(path+'\\'+dir_list[i])
-#         data_img_flip = cv2.flip(data_img_read, 1)
-        
-#         for j in range(len(input_img)):
-#              for k in range(len(data_img_flip)):
-#                   # Correcting r, g, b values for data pool image
-#                   for w in range(3):
-#                     if data_img_flip[j,k][w] < 50:
-#                         data_img_flip[j,k][w] = 0
-#                     else:
-#                         data_img_flip[j,k][w] = 255
-#                     if input_img[j,k][w] < 50:
-#                             input_img[j,k][w] = 0
-#                     else:
-#                         input_img[j,k][w] = 255
-#     return input_img
-    
-# *********************************************************************************************************
-
-
-
 def conv(in_image, kernel):
     # Array of convolutions
     convolved_arr = []
@@ -121,6 +90,7 @@ def evaluation(in_path, test_path, kernel):
 def decision(in_path, kernel, threshold):
     img_read = cv2.imread(in_path)
     y = stats(img_read, kernel)
+    print(y[0])
     if y[0] > threshold:
         return False # Friendly
     else:
@@ -128,21 +98,31 @@ def decision(in_path, kernel, threshold):
 
 
 def main():
-    in_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zack')
-    data_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zack_cropped\\cropped10.jpg')
-    test_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\testpics')
+    in_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOccupied')
+    data_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\filters\\cropv22.png')
+    test_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\test')
 
+    # timg = cv2.imread(test_path)
+    # print(n.shape(timg))
+
+    #******** Determining threshold **********
     #zack_image = cv2.imread(in_path)
     kernel = cv2.imread(data_path)
-    threshold = 750
-    dir_list2 = os.listdir(test_path)
-    for i in range(len(dir_list2)):
-        path = test_path+"\\"+dir_list2[i]
-        print(decision(path, kernel, threshold))
-    #evaluation(in_path, test_path, kernel)
-    #print(stats(zack_image, kernel, "Zack"))
+    threshold = 640
+    # dir_list1 = os.listdir(in_path)
+    # dir_list2 = os.listdir(test_path)
+    # for i in range(len(dir_list2)):
+    #     path2 = test_path+"\\"+dir_list2[i]
+    #     print(decision(path2, kernel, threshold))
 
-    #test_image = cv2.imread(test_path)
+    # for j in range(len(dir_list2)):
+    #     path1 = in_path+"\\"+dir_list1[j]
+    #     print(decision(path1, kernel, threshold))
+
+    #evaluation(in_path, test_path, kernel)
+    # print(stats(zack_image, kernel, "Zack"))
+
+    # test_image = cv2.imread(test_path)
     # print(stats(zack_image, kernel, "Zack Input"))
     # print(stats(test_image, kernel, "Test Input"))
 

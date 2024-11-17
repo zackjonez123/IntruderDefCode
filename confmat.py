@@ -1,19 +1,41 @@
 """
 ********** Confusion Matrix ********
 """
-from unittest import TestLoader
-from sklearn.metrics import confusion_matrix
-import seaborn as sn
-import pandas as pd
+import RasPi
+import nnet
 
-y_pred = []
-y_true = []
+def mat(res):
+    f_count = 0
+    h_count = 0
+    if res == 0:
+        f_count += 1
+    else:
+        h_count += 1
+    f_total = 1 - ((100 - f_count) / 100)
+    h_total = 1 - ((100 - h_count) / 100)
+    result = [f_total, h_total]
+    return result
 
-# Iterate through test data
-for inputs, labels in testloader:
+
+def main():
+    print("Confusion Matrix")
+    print("Friendly case")
+    friendly_path = "" #100 images of friendly occupant
+    friendly_crop = ""
+    nnet.cropAll(friendly_path, friendly_crop, "fcrop")
+    res1 = RasPi.path(friendly_crop)
+    final1 = mat(res1)
+    print("Number of Friendly ID", final1[0], "Number of Hostile ID", final1[1])
+
+    print("Hostile case")
+    hostile_path = "" #100 images of hostile occupant
+    hostile_crop = ""
+    nnet.cropAll(hostile_path, hostile_crop, "hcrop")
+    res2 = RasPi.path(hostile_crop)
+    final2 = mat(res2)
+    print("Number of Friendly ID", final2[0], "Number of Hostile ID", final2[1])
 
 
-# categories
-classes = ('Friendly', 'Hostile')
 
-# build confusion matrix
+if __name__ == '__main__':
+    main()

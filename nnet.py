@@ -30,10 +30,10 @@ def calc(i, k, s):
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 239, kernel_size=4, stride=2) # calc(480, 4, 2) == 239
-        #self.drop1 = nn.Dropout(0.25) # probability of an element being zeroed
-        #self.drop2 = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(119*119*239, 100) # torch.Size([10, 239, 119, 119]) Pool
+        self.conv1 = nn.Conv2d(1, 119, kernel_size=4, stride=2) # calc(480, 4, 2) == 239, small size == 69
+        self.drop1 = nn.Dropout(0.25) # probability of an element being zeroed
+        self.drop2 = nn.Dropout(0.5)
+        self.fc1 = nn.Linear(59*59*119, 100) # torch.Size([10, 239, 119, 119]) Pool, small size == 34*34*69
         self.fc2 = nn.Linear(100, 3) # 100 and 84 can be changed
 
     def forward(self, x):
@@ -42,12 +42,12 @@ class Net(nn.Module):
         x = F.relu(x)
         x = F.max_pool2d(x, 2)
         #print(x.shape, "Pool")
-        #x = self.drop1(x)
+        x = self.drop1(x)
         x = torch.flatten(x, 1)
         #print(x.shape, "Linear input")
         x = self.fc1(x)
         x = F.relu(x)
-        #x = self.drop2(x)
+        x = self.drop2(x)
         x = self.fc2(x)
         output = F.log_softmax(x, dim=1)
         return output
@@ -114,48 +114,50 @@ def cropAll(in_path, write_path, name):
 
 def main():
 
-    # Device config
-    device = torch.device("cpu")
+    # # Device config
+    # device = torch.device("cpu")
 
-    # Hyper parameters
-    epochs = 1 # can increase for more accuracy
-    batch_size = 10
-    learning_rate = 1.0
+    # # Hyper parameters
+    # epochs = 1 # can increase for more accuracy
+    # batch_size = 10
+    # learning_rate = 1.0
 
-    # Load images into train and test datasets
-    trainkwargs = {'batch_size':10, 'shuffle':True}
-    testkwargs = {'batch_size':10, 'shuffle':True}
-    path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes')
-    full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader) 
-    print('Subfolder int assignment', full_data.class_to_idx)
-    traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
-    loadtrain = DataLoader(traindata, **trainkwargs)
-    loadtest = DataLoader(testdata, **testkwargs)
-    # for batchnum, (pic, label) in enumerate(loadtrain):
-    #     print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
+    # # Load images into train and test datasets
+    # trainkwargs = {'batch_size':10, 'shuffle':True}
+    # testkwargs = {'batch_size':10, 'shuffle':True}
+    # path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes')
+    # full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader) 
+    # print('Subfolder int assignment', full_data.class_to_idx)
+    # traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
+    # loadtrain = DataLoader(traindata, **trainkwargs)
+    # loadtest = DataLoader(testdata, **testkwargs)
+    # # for batchnum, (pic, label) in enumerate(loadtrain):
+    # #     print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
 
-    model = Net().to(device)
-    optimizer = optim.Adadelta(model.parameters(), lr=learning_rate)
+    # model = Net().to(device)
+    # optimizer = optim.Adadelta(model.parameters(), lr=learning_rate)
 
-    scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
-    for epoch in range(1, epochs + 1):
-        train(model, device, loadtrain, optimizer, epoch)
-        test(model, device, loadtest)
-        scheduler.step()
+    # scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
+    # for epoch in range(1, epochs + 1):
+    #     train(model, device, loadtrain, optimizer, epoch)
+    #     test(model, device, loadtest)
+    #     scheduler.step()
 
-    torch.save(model.state_dict(), "results_cnn.pt") # Coefficients to send to Raspberry Pi
+    # torch.save(model.state_dict(), "results_cnn.pt") # Coefficients to send to Raspberry Pi
 
     # Sample Data Paths
-    open_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\opendoor'
-    closed_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\closedoor'
-    zack_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zack'
-
-    # Crop and save sample data images into 'classes'
+    open_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\openT3'
+    closed_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\closedT3'
+    zack_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zackT3'
+    test_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\test\\coleT4'
+    test_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\testcrop'
+    cropAll(test_path, test_write_path, name='cole')
+    #Crop and save sample data images into 'classes'
     # open_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOpen'
     # cropAll(open_path, open_write_path, name='open')
     # closed_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedClosed'
     # cropAll(closed_path, closed_write_path, name='closed')
-    # zack_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedZack'
+    # zack_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOccupied'
     # cropAll(zack_path, zack_write_path, name='zack')
 
 if __name__ == '__main__':

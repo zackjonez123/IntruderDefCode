@@ -7,7 +7,7 @@ def crop(read_path):
     #print(input_img.shape)
 
     # Crop the image
-    cropped_img = input_img[0:480, 80:560]
+    cropped_img = input_img[130:370, 210:450] # bad crop = 180:320, 260:400
     # cv2.imshow("cropped image", cropped_img)
     # print(cropped_img.shape)
    
@@ -15,3 +15,9 @@ def crop(read_path):
     # cv2.destroyAllWindows()
     return cropped_img
 
+def main():
+    crop('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\test\\coleT4\\coleT49.jpg')
+
+
+if __name__ == '__main__':
+    main()

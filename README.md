@@ -5,7 +5,7 @@
 * **Major components**  
   * USB camera  
   * Wireless microcontroller   
-  * Convolutional Neural Network  
+  * Convolutional Neural Network (CNN)
   * Servo motor  
 *  **Basic Workflow**  
   * The camera provides live footage to a microcontroller  

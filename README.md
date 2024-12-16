@@ -37,7 +37,7 @@ The **intent** of this project is to create a working concept that can be utiliz
   * *servo.py* \-  servo motor controls  
   * *RasPi.py* \- main file  
   * *confmat.py* \-  Confusion Matrix to test the accuracy of the system
-  * *facedetector.py* \- Uses object detection and geometric analysis to differentiate between people, replaces *customconv.py*
+  * *facedetection.py* \- Uses object detection and geometric analysis to differentiate between people, replaces *customconv.py*
 
 **Planned Developments**
 

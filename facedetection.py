@@ -8,14 +8,6 @@ import cv2
 import os
 import math
 
-# Detect Faces (rectangle)
-# Detect Landmarks 
-# Extract Landmarks
-# Create a threshold for landmarks (margin of error)
-# Compare a new image with threshold
-# If within threshold ==> Me (friendly)
-# If outside threshold ==> someone else (hostile)
-
 Facial_IDX = {"nose":(27, 35), "left eye":(42, 48), "right eye":(36, 42)} # Indexes for landmarks of interest (eyes and nose)
 
 def landmarks(path):
@@ -103,57 +95,3 @@ def decision(path, MoE):
             return True # Hostile
         else:
             return False # Friendly
-
-def main():
-    path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\gray_c'
-    # print(landmarks(path))
-
-    #print(decision(path, 1))
-
-    dir_list = os.listdir(path)
-    a_arr = []
-    b_arr = []
-    c_arr = []
-    d_arr = []
-    e_arr = []
-    f_arr = []
-    g_arr = []
-    count = 0
-    for i in range(len(dir_list)):
-        #face_map = landmarks(path+"\\"+dir_list[i])
-        result = decision(path+"\\"+dir_list[i], 0.4)
-        if result == False:
-            count +=1
-        else:
-            count = count
-    print("Expected Friendly = 0, Actual = ", count)
-    #     a_arr.append(face_map[0])
-    #     b_arr.append(face_map[1])
-    #     c_arr.append(face_map[2])
-    #     d_arr.append(face_map[3])
-    #     e_arr.append(face_map[4])
-    #     f_arr.append(face_map[5])
-    #     g_arr.append(face_map[6])
-
-    # a_thresh = [np.max(a_arr), np.min(a_arr)]
-    # b_thresh = [np.max(b_arr), np.min(b_arr)]
-    # c_thresh = [np.max(c_arr), np.min(c_arr)]
-    # d_thresh = [np.max(d_arr), np.min(d_arr)]
-    # e_thresh = [np.max(e_arr), np.min(e_arr)]
-    # f_thresh = [np.max(f_arr), np.min(f_arr)]
-    # g_thresh = [np.max(g_arr), np.min(g_arr)]
-
-    # print(a_thresh)
-    # print(b_thresh)
-    # print(c_thresh)
-    # print(d_thresh)
-    # print(e_thresh)
-    # print(f_thresh)
-    # print(g_thresh)
-
-    
-
-if __name__ == '__main__':
-    main()
-
-

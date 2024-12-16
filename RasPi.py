@@ -8,17 +8,17 @@ from nnet import grayscaleloader
 import image_capture
 import crop
 #import customconv
+import facedetector
 import cv2
 import servo
 import time
-import facedetector
 
 def main():
     '''
-    Daemon: Take pics every 2 seconds and run CNN, output results
-    If results are hostile, turn servo motor and continue, else -> continue
-    Stops on shutdown
-    Start on startup
+    Daemon: Take pics every 2 seconds and run CNN, output results (Done)
+    If results are hostile, turn servo motor and continue, else -> continue (Done)
+    Stops on shutdown (Done)
+    Start on startup (Done)
     Remote control through a socket (Spring)
     Log file (Spring)
     '''
@@ -27,42 +27,38 @@ def main():
     model.eval() # So torch doesn't change coefficients
     
     while True:
-        time.sleep(2)
-        # kill pid, ps -ef | grep python
-        now=time.time()
+        time.sleep(2) # Run every 2 seconds
+        now=time.time() # Start recording time
 
-        # Use grayscaleloader to load image = grayscale
-        image_capture.cropCurrent('current_img') # Takes picture with USB cam
+        # Use grayscaleloader to load image as a threshold image (purely black and white)
+        image_capture.cropCurrent('current_img') # Takes picture with USB cam and crops it for the CNN
         capt_path = "/home/pi/code/captured_images/current_img.jpg" # path to captured image (from USB cam)
-        grayscale = grayscaleloader(capt_path) # Reads the current image
+        grayscale = grayscaleloader(capt_path) # Reads the captured image
         img = transforms.functional.to_tensor(grayscale) # Loads the current image as a tensor
         img = img[None, :, :, :] # Makes image tensor 4 dimensional for the CNN
         with torch.no_grad():
             data = img.to("cpu")
-            output = model(data)
+            output = model(data) # Run CNN with captured image
             pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
-            print(pred[0][0])
 
-        # Create conditional statements:
+        # Conditional statements:
         # - if output == closed or open ==> flag "friendly" (do nothing)
         if pred[0][0] == 0 or pred[0][0] == 2:
             print("Friendly")
-            print("Friendly Time (seconds)", time.time()-now)
-        # - if output == occupied ==> run customconv.py
-        # - if customconv == "friendly" ==> do nothing
+            print("Open/Closed Time (seconds)", time.time()-now) # CNN run time
+        # - if output == occupied ==> run facedetector.py
+        # - if facedetector == "friendly" ==> do nothing
         # - otherwise ==> turn servo motor
         else:
-            #data_path = "/home/pi/code/captured_images/filter1.jpg"
-            #kernel = cv2.imread(data_path)
-            gray_path = "/home/pi/code/captured_images/gray_current_img.jpg"
-            result = facedetector.decision(gray_path, 1)
+            gray_path = "/home/pi/code/captured_images/gray_current_img.jpg" # path to the captured image in grayscale
+            result = facedetector.decision(gray_path, 1) # run facedetector with the grayscale captured image
             if result == True:
                 print("Hostile")
-                servo.servo1()
-                print("Hostile Time (seconds)", time.time()-now)
+                servo.servo1() # activate servo
+                print("Hostile Time (seconds)", time.time()-now) # CNN + facedetector runtime
             else:
                 print("Friendly")
+                print("Friendly Time (seconds)", time.time()-now) # CNN + facedetector runtime
         
-
 if __name__ == '__main__':
     main()

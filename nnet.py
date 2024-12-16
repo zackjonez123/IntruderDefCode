@@ -167,23 +167,5 @@ def main():
 
     torch.save(model.state_dict(), "results_cnn.pt") # Coefficients to send to Raspberry Pi
 
-    # Sample Data Paths
-    # open_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\open\\open'
-    # closed_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\closed\\closed'
-    # zack_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\zack\\zack'
-    # test_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\proto_test\\cole'
-    # zack_test = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\proto_test\\zack2'
-    # test_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\testcrop\\cole'
-    # zack_test_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\testcrop\\zack'
-    # cropAll(test_path, test_write_path, name='cole')
-    # cropAll(zack_test, zack_test_write_path, name='zack')
-    # #Crop and save sample data images into 'classes'
-    # open_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOpen'
-    # cropAll(open_path, open_write_path, name='open')
-    # closed_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedClosed'
-    # cropAll(closed_path, closed_write_path, name='closed')
-    # zack_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOccupied'
-    # cropAll(zack_path, zack_write_path, name='zack')
-
 if __name__ == '__main__':
     main()

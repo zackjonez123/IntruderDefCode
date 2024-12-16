@@ -37,12 +37,13 @@ The **intent** of this project is to create a working concept that can be utiliz
   * *servo.py* \-  servo motor controls  
   * *RasPi.py* \- main file  
   * *confmat.py* \-  Confusion Matrix to test the accuracy of the system
+  * *facedetector.py* \- Uses object detection and geometric analysis to differentiate between people, replaces *customconv.py*
 
 **Planned Developments**
 
 * **Improved Accuracy**  
-  * Face Detection  
-  * Geometric Analysis  
+  * Wireless door sensor (to keep images consistent)  
+  * More complex geometric analysis 
 * **Improved Speed**  
   * Cutting down the time it takes for the system to make a decision   
     * Currently takes approx. 10 seconds  

@@ -7,22 +7,6 @@ import os
 import customconv
 import cv2
 
-def cnn_matrix(path):
-    f_count = 0
-    h_count = 0
-    dir_list = os.listdir(path)
-    for i in range(len(dir_list)):
-        capt_path = path+'\\'+dir_list[i] # path to captured image (from USB cam)
-        res = RasPi.path(capt_path)
-        if res == 0:
-            f_count += 1
-        else:
-            h_count += 1
-        # f_total = 1 - ((100 - f_count) / 100)
-        # h_total = 1 - ((100 - h_count) / 100)
-    fvh = [f_count, h_count] # Friendly vs Hostile
-    return fvh
-
 def conv_matrix(path, kernel):
     f_count = 0
     h_count = 0
@@ -69,14 +53,5 @@ def main():
     print("Friendly ID: Expected = 100, Actual = ", res1[0])
     print("Hostile ID: Expected = 100, Actual = ", res2[1])
 
-    # Test cases
-    # (a) open/closed door ("Friendly") CNN
-    # (b) occupied with "full" images CNN
-    # (c) occupied with small images CNN (Cole)
-    # (d) positive ID with face images (Cole vs. me)
-    # (e) postitive ID with small images (Cole cropped vs. me)
-
-    # Predicted problems
-    # (c) and (d)
 if __name__ == '__main__':
     main()

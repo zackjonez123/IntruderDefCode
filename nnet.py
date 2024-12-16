@@ -1,5 +1,5 @@
 """
-******* This is the Neural Network Prototype **********
+******* This is the Convolutional Neural Network **********
 
 """
 import cv2
@@ -22,8 +22,17 @@ from PIL import Image
 from torch.utils.data import DataLoader
 from config import testarg, trainarg
 
-# Calculates the number of outputs given input channels and kernel/filter size
 def calc(i, k, s):
+    """ Calculates the number of outputs given input channels and kernel/filter size
+
+    Args:
+        i (int): number of input channels
+        k (int): kernel size
+        s (int): stride
+
+    Returns:
+        o (int): number of output channels
+    """
     o = ((i-k) / s) + 1
     return o
 
@@ -76,7 +85,6 @@ def train(model, device, loadtrain, optimizer, epochs):
 
     print('Finished Training')
 
-
 # Test Data
 def test(model, device, test_loader):
     model.eval()
@@ -97,13 +105,27 @@ def test(model, device, test_loader):
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
     
-
 def grayscaleloader(path:str)->Image.Image:
+    """ Loads an image and converts it to a threshold image
+
+    Args:
+        path (str): path to the image
+
+    Returns:
+        pic (image): threshold image
+    """
     with open(path, 'rb') as file:
         pic = Image.open(file).convert('L')
     return pic
 
 def cropAll(in_path, write_path, name):
+    """ Crops all the images in a folder
+
+    Args:
+        in_path (_type_): _description_
+        write_path (_type_): _description_
+        name (_type_): _description_
+    """
     dir_list = os.listdir(in_path)
     count = 0
     for j in range(len(dir_list)):
@@ -113,46 +135,49 @@ def cropAll(in_path, write_path, name):
         count+=1
 
 def main():
+    # Device config
+    device = torch.device("cpu")
 
-    # # Device config
-    # device = torch.device("cpu")
+    # Hyper parameters
+    epochs = 1 # can increase for more accuracy
+    batch_size = 10 # number of images in a batch
+    learning_rate = 1.0 # can decrease for more accuracy
 
-    # # Hyper parameters
-    # epochs = 1 # can increase for more accuracy
-    # batch_size = 10
-    # learning_rate = 1.0
+    # Load images into train and test datasets
+    trainkwargs = {'batch_size':10, 'shuffle':True}
+    testkwargs = {'batch_size':10, 'shuffle':True}
+    path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes')
+    full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader) 
+    print('Subfolder int assignment', full_data.class_to_idx)
+    traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
+    loadtrain = DataLoader(traindata, **trainkwargs)
+    loadtest = DataLoader(testdata, **testkwargs)
+    # For printing info on batches
+    # for batchnum, (pic, label) in enumerate(loadtrain):
+    #     print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
 
-    # # Load images into train and test datasets
-    # trainkwargs = {'batch_size':10, 'shuffle':True}
-    # testkwargs = {'batch_size':10, 'shuffle':True}
-    # path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes')
-    # full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader) 
-    # print('Subfolder int assignment', full_data.class_to_idx)
-    # traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test
-    # loadtrain = DataLoader(traindata, **trainkwargs)
-    # loadtest = DataLoader(testdata, **testkwargs)
-    # # for batchnum, (pic, label) in enumerate(loadtrain):
-    # #     print('batch #', batchnum, 'pic shape', pic.shape, 'label shape', label.shape)
+    model = Net().to(device)
+    optimizer = optim.Adadelta(model.parameters(), lr=learning_rate)
 
-    # model = Net().to(device)
-    # optimizer = optim.Adadelta(model.parameters(), lr=learning_rate)
+    scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
+    for epoch in range(1, epochs + 1):
+        train(model, device, loadtrain, optimizer, epoch)
+        test(model, device, loadtest)
+        scheduler.step()
 
-    # scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
-    # for epoch in range(1, epochs + 1):
-    #     train(model, device, loadtrain, optimizer, epoch)
-    #     test(model, device, loadtest)
-    #     scheduler.step()
-
-    # torch.save(model.state_dict(), "results_cnn.pt") # Coefficients to send to Raspberry Pi
+    torch.save(model.state_dict(), "results_cnn.pt") # Coefficients to send to Raspberry Pi
 
     # Sample Data Paths
-    open_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\openT3'
-    closed_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\closedT3'
-    zack_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\zackT3'
-    test_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\test\\coleT4'
-    test_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\testcrop'
-    cropAll(test_path, test_write_path, name='cole')
-    #Crop and save sample data images into 'classes'
+    # open_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\open\\open'
+    # closed_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\closed\\closed'
+    # zack_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\zack\\zack'
+    # test_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\proto_test\\cole'
+    # zack_test = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\proto_test\\zack2'
+    # test_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\testcrop\\cole'
+    # zack_test_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\testcrop\\zack'
+    # cropAll(test_path, test_write_path, name='cole')
+    # cropAll(zack_test, zack_test_write_path, name='zack')
+    # #Crop and save sample data images into 'classes'
     # open_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedOpen'
     # cropAll(open_path, open_write_path, name='open')
     # closed_write_path = 'C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes\\croppedClosed'

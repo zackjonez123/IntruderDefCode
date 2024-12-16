@@ -7,10 +7,11 @@ from nnet import Net
 from nnet import grayscaleloader
 import image_capture
 import crop
-import customconv
+#import customconv
 import cv2
 import servo
 import time
+import facedetector
 
 def main():
     '''
@@ -22,7 +23,7 @@ def main():
     Log file (Spring)
     '''
     model = Net() # Stores the CNN as the object "model"
-    model.load_state_dict(torch.load("results_cnn copy.pt", weights_only=True)) # Loads file of coefficients
+    model.load_state_dict(torch.load("results_cnn.pt", weights_only=True)) # Loads file of coefficients
     model.eval() # So torch doesn't change coefficients
     
     while True:
@@ -51,9 +52,10 @@ def main():
         # - if customconv == "friendly" ==> do nothing
         # - otherwise ==> turn servo motor
         else:
-            data_path = "/home/pi/code/captured_images/filter1.jpg"
-            kernel = cv2.imread(data_path)
-            result = customconv.decision(capt_path, kernel, 710, 620)
+            #data_path = "/home/pi/code/captured_images/filter1.jpg"
+            #kernel = cv2.imread(data_path)
+            gray_path = "/home/pi/code/captured_images/gray_current_img.jpg"
+            result = facedetector.decision(gray_path, 1)
             if result == True:
                 print("Hostile")
                 servo.servo1()

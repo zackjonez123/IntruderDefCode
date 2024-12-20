@@ -1,6 +1,6 @@
 **Intruder Defense System (IDS) \- Zack Jones**
 
-![build](https://github.com/user-attachments/assets/f3e7d63c-23be-4f41-a164-b57b8f318a3e)
+![build](https://github.com/user-attachments/assets/0834cd5f-1200-4f52-accf-259891ea4328)
 
 **Abstract**
 
@@ -40,6 +40,8 @@ The **intent** of this project is to create a working concept that can be utiliz
   * *RasPi.py* \- main file  
   * *confmat.py* \-  Confusion Matrix to test the accuracy of the system  
   * *facedetection.py* \- Uses object detection and geometric analysis (landmarks) to differentiate between people, replaces *customconv.py*
+
+![examples1](https://github.com/user-attachments/assets/f0354690-043d-4f63-9861-4e5277662c8d)
 
 **Planned Developments**
 

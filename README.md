@@ -1,5 +1,5 @@
 **Intruder Defense System (IDS) \- Zack Jones**
-
+!(images/build.jpg)
 **Abstract**
 
 * **Major components**  

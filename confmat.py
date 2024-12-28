@@ -1,6 +1,7 @@
 """
 ********** Confusion Matrix ********
 Intended for testing the accuracy of facedetection.py
+Copyright 2024, Zack Jones, All rights reserved.
 """
 
 import os

@@ -1,3 +1,4 @@
+# Copyright 2024, Zack Jones, All rights reserved.
 from dataclasses import dataclass
 @dataclass
 class CFG():

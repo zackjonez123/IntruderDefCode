@@ -1,4 +1,5 @@
 #!/home/pi/code/virtenv1/bin python3
+# Copyright 2024, Zack Jones, All rights reserved.
 import torch
 import torchvision.transforms as transforms
 from torchvision.transforms import functional

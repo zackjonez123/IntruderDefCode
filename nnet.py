@@ -63,6 +63,15 @@ class Net(nn.Module):
 
 # Train data
 def train(model, device, loadtrain, optimizer, epochs):
+    """ Training Model
+
+    Args:
+        model (class): Net class, Convolutional Neural Network
+        device (class): CPU, device the CNN runs on
+        loadtrain (class): DataLoader, dataset of training images
+        optimizer (class): Adadelta, adjusts model parameters to reduce loss
+        epochs (int): number of training iterations 
+    """
     model.train()
     total_steps = len(loadtrain)
     #for epoch in range(epochs):
@@ -87,6 +96,13 @@ def train(model, device, loadtrain, optimizer, epochs):
 
 # Test Data
 def test(model, device, test_loader):
+    """ Testing Model
+
+    Args:
+        model (class): Net class, Convolutional Neural Network
+        device (class): CPU, device the CNN runs on
+        test_loader (class): DataLoader, dataset of testing images
+    """
     model.eval()
     test_loss = 0
     correct = 0

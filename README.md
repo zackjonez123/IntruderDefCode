@@ -12,7 +12,10 @@
 * **Basic Workflow**  
   * The camera provides live footage to a microcontroller  
   * The microcontroller runs a machine-learning algorithm on images  
-  * The microcontroller autonomously determines whether or not to activate a servo motor based on image processing result  
+  * The microcontroller autonomously determines whether or not to activate a servo motor based on image processing result
+ 
+![Work Flow Diagram](https://github.com/user-attachments/assets/065a01b5-8ff3-48c9-b54b-0e98ebfcb073)
+
 * **Likely applications**  
   * unlocking a doggy door for only the owner's dog  
   * stopping a food slicer if a finger is too near the blade  

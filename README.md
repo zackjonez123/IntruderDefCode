@@ -9,7 +9,7 @@
   * Wireless microcontroller   
   * Convolutional Neural Network (CNN)  
   * Servo motor  
-*  **Basic Workflow**  
+* **Basic Workflow**  
   * The camera provides live footage to a microcontroller  
   * The microcontroller runs a machine-learning algorithm on images  
   * The microcontroller autonomously determines whether or not to activate a servo motor based on image processing result  

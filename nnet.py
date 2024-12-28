@@ -43,7 +43,7 @@ class Net(nn.Module):
         self.drop1 = nn.Dropout(0.25) # probability of an element being zeroed
         self.drop2 = nn.Dropout(0.5)
         self.fc1 = nn.Linear(59*59*119, 100) # torch.Size([10, 239, 119, 119]) Pool, small size == 34*34*69
-        self.fc2 = nn.Linear(100, 3) # 100 and 84 can be changed
+        self.fc2 = nn.Linear(100, 3) 
 
     def forward(self, x):
         x = self.conv1(x)
@@ -76,7 +76,6 @@ def train(model, device, loadtrain, optimizer, epochs):
     total_steps = len(loadtrain)
     #for epoch in range(epochs):
     for batch_idx, (images, labels) in enumerate(loadtrain):
-        # inputs layer: 3 input channels, 6 output channels, 5x5 kernel size
         images = images.to(device)
         labels = labels.to(device)
 

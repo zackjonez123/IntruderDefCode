@@ -27,7 +27,7 @@ def landmarks(path):
     rects = detector(img, 1)
 
     # Generate Landmarks
-    predictor = dlib.shape_predictor('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\shape_predictor_68_face_landmarks.dat')
+    predictor = dlib.shape_predictor('...\\shape_predictor_68_face_landmarks.dat')
     dists = []
     # Loop over face detections
     for (i, rect) in enumerate(rects):

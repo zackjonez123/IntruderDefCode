@@ -1,5 +1,6 @@
 """
     ****** This is the manual convolutional pass for the IDS ******
+    Copyright 2024, Zack Jones, All rights reserved.
 """
 import numpy as n
 import cv2

@@ -65,6 +65,6 @@ The **intent** of this project is to create a working concept that can be utiliz
   * Remote control (socket)  
   * Log Files
 
-**Development Videos**  
-Raw footage of the project development: [IDS Development](https://drive.google.com/drive/folders/1jQ2tSf9WRx348hqry3uunkBAgzm37CJ6?usp=sharing)
+**Demo Video**  
+![Prototype1](https://youtu.be/Fp7NFitlmFc?si=6M6vlmg8O0c3po1B)
 

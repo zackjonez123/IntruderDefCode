@@ -1,3 +1,4 @@
+# Copyright 2024, Zack Jones, All rights reserved.
 import cv2
 
 def crop(read_path):

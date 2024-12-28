@@ -66,5 +66,5 @@ The **intent** of this project is to create a working concept that can be utiliz
   * Log Files
 
 **Demo Video**  
-![Prototype1](https://youtu.be/Fp7NFitlmFc?si=6M6vlmg8O0c3po1B)
+https://youtu.be/Fp7NFitlmFc?si=6M6vlmg8O0c3po1B
 

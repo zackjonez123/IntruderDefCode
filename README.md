@@ -41,6 +41,8 @@ The **intent** of this project is to create a working concept that can be utiliz
   * *confmat.py* \-  Confusion Matrix to test the accuracy of the system  
   * *facedetection.py* \- Uses object detection and geometric analysis (landmarks) to differentiate between people, replaces *customconv.py*
 
+![FlowDiagram](https://github.com/user-attachments/assets/de042c25-57fc-4edc-8e0b-25ea10561957)
+
 ![examples1](https://github.com/user-attachments/assets/f0354690-043d-4f63-9861-4e5277662c8d)
 
 **Planned Developments**
@@ -63,4 +65,3 @@ The **intent** of this project is to create a working concept that can be utiliz
 **Development Videos**  
 Raw footage of the project development: [IDS Development](https://drive.google.com/drive/folders/1jQ2tSf9WRx348hqry3uunkBAgzm37CJ6?usp=sharing)
 
-Here is the link to the Github Repo: [https://github.com/zackjonez123/IntruderDefCode.git](https://github.com/zackjonez123/IntruderDefCode.git)  

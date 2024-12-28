@@ -40,8 +40,8 @@ def main():
     print("***Confusion Matrix***")
     print("*Cole vs Zack 240 Crop - Conv Test*")
     # Paths to image folders
-    test_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\gray_c')
-    in_path = ('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\proto\\gray_z')
+    test_path = ('...\\pics\\proto\\gray_c')
+    in_path = ('...\\pics\\proto\\gray_z')
     res1 = conv_matrix(in_path)
     res2 = conv_matrix(test_path)
     print("Friendly ID: Expected = 100, Actual = ", res1[0])

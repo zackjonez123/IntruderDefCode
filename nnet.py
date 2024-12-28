@@ -1,6 +1,6 @@
 """
 ******* This is the Convolutional Neural Network **********
-
+Executed on training host
 """
 import cv2
 import crop # My crop.py module

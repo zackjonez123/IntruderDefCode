@@ -161,7 +161,7 @@ def main():
     # Load images into train and test datasets
     trainkwargs = {'batch_size':10, 'shuffle':True}
     testkwargs = {'batch_size':10, 'shuffle':True}
-    path = os.path.join('C:\\Users\\kelly\\Desktop\\IDEs and Sims\\IntruderDef\\pics\\classes')
+    path = os.path.join('...\\pics\\classes')
     full_data = datasets.ImageFolder(root=path, transform=transforms.ToTensor(), loader=grayscaleloader) 
     print('Subfolder int assignment', full_data.class_to_idx)
     traindata, testdata = torch.utils.data.random_split(full_data, [0.8, 0.2]) # 80% train, 20% test

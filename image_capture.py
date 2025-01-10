@@ -4,6 +4,7 @@
 
 import cv2
 import time
+import crop
 
 def main():
     """ Runs picloop()

@@ -53,6 +53,24 @@ def picloop(img_type):
         print(count)
     return None
 
+def cropCurrent(name):
+     """ Takes image, crops, and saves as grayscale and binary images.
+
+    Args:
+        name (string): desired name of the image file
+    """
+    pic(name)
+    pic(name)
+    pic(name)
+    pic(name)
+    pic(name)
+    pic(name)
+    path = '/home/pi/code/captured_images/'+name+'.jpg'
+    grayscale(name)
+    cropped_image = crop.crop(path)
+    cv2.imwrite(path, cropped_image)
+    return None
+
 def pic(name):
     """ Access USB cam and take picture.
 

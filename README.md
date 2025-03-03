@@ -43,6 +43,7 @@ The **intent** of this project is to create a working concept that can be utiliz
   * *RasPi.py* \- main file  
   * *confmat.py* \-  Confusion Matrix to test the accuracy of the system  
   * *facedetection.py* \- Uses object detection and geometric analysis (landmarks) to differentiate between people, replaces *customconv.py*
+  * *ui.py* \- Allows a user to train the system via prompts in the terminal window (Added 3/3/25)
 
 ![FlowDiagram](https://github.com/user-attachments/assets/de042c25-57fc-4edc-8e0b-25ea10561957)
 

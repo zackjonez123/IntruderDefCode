@@ -9,7 +9,7 @@ from nnet import grayscaleloader
 import image_capture
 import crop
 #import customconv
-import facedetector
+import facedetection
 import cv2
 import servo
 import time
@@ -52,7 +52,7 @@ def main():
         # - otherwise ==> turn servo motor
         else:
             gray_path = "/home/pi/code/captured_images/gray_current_img.jpg" # path to the captured image in grayscale
-            result = facedetector.decision(gray_path, 1) # run facedetector with the grayscale captured image
+            result = facedetection.decision(gray_path, 1.5) # run facedetector with the grayscale captured image
             if result == True:
                 print("Hostile")
                 servo.servo1() # activate servo

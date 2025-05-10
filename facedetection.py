@@ -54,6 +54,8 @@ def landmarks(path):
         dists.append(e)
         dists.append(f)
         dists.append(g)
+        dists.append(y+h) #Added height measurement
+        print(str(y+h))
     return dists
             
 def decision(path, MoE):
@@ -77,7 +79,6 @@ def decision(path, MoE):
     f_thresh = [9+MoE, 7-MoE] # nose_height
     g_thresh = [14+MoE, 12-MoE] # nose_width
 
-    # Loop through each distance from the image
     for i in range(len(face_map)):
         if face_map[i] <= a_thresh[1] or face_map[0] >= a_thresh[0]:
             return True # Hostile
@@ -92,6 +93,8 @@ def decision(path, MoE):
         elif face_map[5] <= f_thresh[1] or face_map[5] >= f_thresh[0]:
             return True # Hostile
         elif face_map[6] <= g_thresh[1] or face_map[6] >= g_thresh[0]:
+            return True # Hostile
+        elif face_map[7] < 275-15 or face_map[7] > 295+10: 
             return True # Hostile
         else:
             return False # Friendly
